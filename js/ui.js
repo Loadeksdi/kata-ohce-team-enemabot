@@ -1,34 +1,32 @@
-const prompt = require('prompt-sync')()
-const reverse = require('./ohce').reverse
+const { Interactor, AbstractUi } = require('./interactor')
 
-class ConsoleInteractor {
-  readInput () {
-    return prompt('')
+const prompt = require('prompt-sync')()
+
+class ConsoleInteractor extends Interactor {
+
+  readInput() {
+    return prompt('');
   }
 
-  printMessage (message) {
+  printMessage(message) {
     console.log(message)
   }
 }
 
-class UI {
-  constructor () {
-    this.interactor = new ConsoleInteractor()
+class UI extends AbstractUi {
+  constructor(interactor) {
+    super(interactor);
   }
 
-  mainLoop () {
+  mainLoop() {
     while (true) {
-      const input = this.interactor.readInput()
-      if (input === 'quit') {
-        break
-      }
-      const reversed = reverse(input)
-      this.interactor.printMessage(reversed)
-      if (input === reversed) {
-        this.interactor.printMessage('That was a palindrome!')
+      const input = this.interactor.readInput();
+      if (!this.handleInputLogic(input)) {
+        break;
       }
     }
   }
+
 }
 
-module.exports = { UI }
+module.exports = { UI, ConsoleInteractor }
